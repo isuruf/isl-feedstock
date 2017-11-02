@@ -15,6 +15,7 @@ build:
 requirements:
   build:
     - gmp >=5.0.1,<7  # [unix]
+    - cmake           # [win]
   run:
     - gmp >=5.0.1,<7  # [unix]
 
