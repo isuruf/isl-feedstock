@@ -1,5 +1,4 @@
 # Taken from https://github.com/llvm-mirror/polly/blob/master/lib/External/CMakeLists.txt
-
 set(ISL_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
 set(ISL_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 
@@ -259,32 +258,29 @@ set (ISL_FILES
   isl/imath/imrat.c
   )
 
-add_polly_library(PollyISL
+add_library(isl
   ${ISL_FILES}
   )
 
+install(DIRECTORY
+  ${ISL_SOURCE_DIR}/include/
+  ${ISL_BINARY_DIR}/include/
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "*.h"
+  PATTERN "CMakeFiles" EXCLUDE
+  PATTERN ".svn" EXCLUDE
+  )
 
-if (NOT LLVM_INSTALL_TOOLCHAIN_ONLY)
-  install(DIRECTORY
-    ${ISL_SOURCE_DIR}/include/
-    ${ISL_BINARY_DIR}/include/
-    DESTINATION include/polly
-    FILES_MATCHING
-    PATTERN "*.h"
-    PATTERN "CMakeFiles" EXCLUDE
-    PATTERN ".svn" EXCLUDE
-    )
-endif()
-
-add_executable(polly-isl-test
+add_executable(isl-test
   isl/isl_test.c
   )
-set_target_properties(polly-isl-test PROPERTIES FOLDER "Polly")
+#set_target_properties(isl-test PROPERTIES FOLDER "Polly")
 
-target_link_libraries(polly-isl-test
-  PollyISL
+target_link_libraries(isl-test
+  isl
   )
 
 # ISL requires at least C99 to compile. gcc < 5.0 use -std=gnu89 as default.
-target_enable_c99(PollyISL)
-target_enable_c99(polly-isl-test)
+target_enable_c99(isl)
+target_enable_c99(isl-test)
