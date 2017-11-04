@@ -6,3 +6,4 @@ cd build
 cmake -G"NMake Makefiles" ..
 cmake --build .
 cmake --build . --target install
+ctest -V

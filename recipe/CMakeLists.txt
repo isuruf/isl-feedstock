@@ -279,7 +279,8 @@ install(DIRECTORY
 add_executable(isl-test
   isl_test.c
   )
-#set_target_properties(isl-test PROPERTIES FOLDER "Polly")
+enable_testing()
+add_test(isl_test isl-test)
 
 target_link_libraries(isl-test
   isl
