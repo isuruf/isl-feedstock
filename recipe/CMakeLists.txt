@@ -276,6 +276,12 @@ install(DIRECTORY
   PATTERN ".svn" EXCLUDE
   )
 
+install(TARGETS isl
+  RUNTIME DESTINATION bin
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
+
 add_executable(isl-test
   isl_test.c
   )
