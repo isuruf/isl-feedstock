@@ -14,12 +14,15 @@ build:
   features:
     - vc9             # [win and py27]
     - vc14            # [win and py>=35]
+  skip:
+    - True            # [win and not py36]
 
 requirements:
   build:
     - gmp >=5.0.1,<7  # [unix]
     - cmake           # [win]
     - python          # [win]
+    - msinttypes      # [win and py27]
     - vc 9            # [win and py27]
     - vc 14           # [win and py>=35]
   run:
