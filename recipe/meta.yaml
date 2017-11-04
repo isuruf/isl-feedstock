@@ -15,17 +15,16 @@ build:
 
 requirements:
   build:
-    - gmp >=5.0.1,<7
+    - gmp >=5.0.1,<7  # [unix]
   run:
-    - gmp >=5.0.1,<7
+    - gmp >=5.0.1,<7  # [unix]
 
 test:
   commands:
-    - test -f "$PREFIX/lib/libisl.a"
-    - test -f "$PREFIX/lib/libisl.la"
-    - test -f "$PREFIX/lib/libisl.so"  # [linux]
-    - test -f "$PREFIX/lib/libisl.dylib"  # [osx]
-    - test -d "$PREFIX/include/isl"
+    - test -f "$PREFIX/lib/libisl.a"            # [unix]
+    - test -f "$PREFIX/lib/libisl.la"           # [unix]
+    - test -f "$PREFIX/lib/libisl${SHLIB_EXT}"  # [unix]
+    - test -d "$PREFIX/include/isl"             # [unix]
 
 about:
   home: http://isl.gforge.inria.fr/
