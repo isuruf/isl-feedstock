@@ -11,13 +11,21 @@ source:
 
 build:
   number: 2
+  features:
+    - vc9             # [win and py27]
+    - vc14            # [win and py>=35]
 
 requirements:
   build:
     - gmp >=5.0.1,<7  # [unix]
     - cmake           # [win]
+    - python          # [win]
+    - vc 9            # [win and py27]
+    - vc 14           # [win and py>=35]
   run:
     - gmp >=5.0.1,<7  # [unix]
+    - vc 9            # [win and py27]
+    - vc 14           # [win and py>=35]
 
 test:
   commands:
