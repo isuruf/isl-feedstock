@@ -10,12 +10,14 @@ source:
   md5: 11436d6b205e516635b666090b94ab32
 
 build:
-  number: 2
+  number: 3
   features:
     - vc9             # [win and py27]
     - vc14            # [win and py>=35]
   skip:
     - True            # [win and not py36]
+  patches:
+    - strdup.diff     # [win]
 
 requirements:
   build:

@@ -1,0 +1,331 @@
+diff --git a/include/isl/ctx.h b/include/isl/ctx.h
+index 7c92523..e4f8365 100644
+--- a/include/isl/ctx.h
++++ b/include/isl/ctx.h
+@@ -229,7 +229,7 @@ isl_stat prefix ## _set_ ## field(isl_ctx *ctx, const char *val)	\
+ 	if (!val)							\
+ 		return isl_stat_error;					\
+ 	free(options->field);						\
+-	options->field = strdup(val);					\
++	options->field = _strdup(val);					\
+ 	if (!options->field)						\
+ 		return isl_stat_error;					\
+ 	return isl_stat_ok;						\
+diff --git a/isl_arg.c b/isl_arg.c
+index 4798a42..40e050d 100644
+--- a/isl_arg.c
++++ b/isl_arg.c
+@@ -77,7 +77,7 @@ static void set_default_str(struct isl_arg *arg, void *opt)
+ {
+ 	const char *str = NULL;
+ 	if (arg->u.str.default_value)
+-		str = strdup(arg->u.str.default_value);
++		str = _strdup(arg->u.str.default_value);
+ 	*(const char **)(((char *)opt) + arg->offset) = str;
+ }
+ 
+@@ -960,13 +960,13 @@ static int parse_str_option(struct isl_arg *decl, char **arg,
+ 
+ 	if (has_argument) {
+ 		free(*p);
+-		*p = strdup(s);
++		*p = _strdup(s);
+ 		return 1;
+ 	}
+ 
+ 	if (arg[1]) {
+ 		free(*p);
+-		*p = strdup(arg[1]);
++		*p = _strdup(arg[1]);
+ 		return 2;
+ 	}
+ 
+@@ -983,7 +983,7 @@ static int isl_arg_str_list_append(struct isl_arg *decl, void *opt,
+ 	if (!list)
+ 		return -1;
+ 	*(char ***)(((char *) opt) + decl->offset) = list;
+-	list[*n] = strdup(s);
++	list[*n] = _strdup(s);
+ 	(*n)++;
+ 	return 0;
+ }
+@@ -1277,7 +1277,7 @@ int isl_args_parse(struct isl_args *args, int argc, char **argv, void *opt,
+ 				char **p;
+ 				p = (char **)(((char *)opt)+args->args[a].offset);
+ 				free(*p);
+-				*p = strdup(argv[1 + skip]);
++				*p = _strdup(argv[1 + skip]);
+ 				argc = drop_argument(argc, argv, 1 + skip, 1);
+ 				--n;
+ 			} else if (ISL_FL_ISSET(flags, ISL_ARG_ALL)) {
+diff --git a/isl_ast.c b/isl_ast.c
+index f13f8a6..a58cae7 100644
+--- a/isl_ast.c
++++ b/isl_ast.c
+@@ -1698,7 +1698,7 @@ __isl_give isl_printer *isl_ast_op_type_set_print_name(
+ 	if (!names)
+ 		return isl_printer_free(p);
+ 	free(names->op_str[type]);
+-	names->op_str[type] = strdup(name);
++	names->op_str[type] = _strdup(name);
+ 
+ 	return p;
+ }
+diff --git a/isl_id.c b/isl_id.c
+index d5c7c71..3dcec8c 100644
+--- a/isl_id.c
++++ b/isl_id.c
+@@ -44,7 +44,7 @@ const char *isl_id_get_name(__isl_keep isl_id *id)
+ 
+ static __isl_give isl_id *id_alloc(isl_ctx *ctx, const char *name, void *user)
+ {
+-	const char *copy = name ? strdup(name) : NULL;
++	const char *copy = name ? _strdup(name) : NULL;
+ 	isl_id *id;
+ 
+ 	if (name && !copy)
+diff --git a/isl_input.c b/isl_input.c
+index 8a44870..81f902d 100644
+--- a/isl_input.c
++++ b/isl_input.c
+@@ -98,7 +98,7 @@ static struct variable *variable_new(struct vars *v, const char *name, int len,
+ 	var = isl_calloc_type(v->ctx, struct variable);
+ 	if (!var)
+ 		goto error;
+-	var->name = strdup(name);
++	var->name = _strdup(name);
+ 	var->name[len] = '\0';
+ 	var->pos = pos;
+ 	var->next = v->v;
+@@ -1186,7 +1186,7 @@ static __isl_give isl_space *read_tuple_space(__isl_keep isl_stream *s,
+ 	if (!tok)
+ 		goto error;
+ 	if (tok->type == ISL_TOKEN_IDENT || tok->is_keyword) {
+-		name = strdup(tok->u.s);
++		name = _strdup(tok->u.s);
+ 		isl_token_free(tok);
+ 		if (!name)
+ 			goto error;
+diff --git a/isl_printer.c b/isl_printer.c
+index 05860da..86fc442 100644
+--- a/isl_printer.c
++++ b/isl_printer.c
+@@ -338,7 +338,7 @@ __isl_give isl_printer *isl_printer_set_indent_prefix(__isl_take isl_printer *p,
+ 		return NULL;
+ 
+ 	free(p->indent_prefix);
+-	p->indent_prefix = prefix ? strdup(prefix) : NULL;
++	p->indent_prefix = prefix ? _strdup(prefix) : NULL;
+ 
+ 	return p;
+ }
+@@ -350,7 +350,7 @@ __isl_give isl_printer *isl_printer_set_prefix(__isl_take isl_printer *p,
+ 		return NULL;
+ 
+ 	free(p->prefix);
+-	p->prefix = prefix ? strdup(prefix) : NULL;
++	p->prefix = prefix ? _strdup(prefix) : NULL;
+ 
+ 	return p;
+ }
+@@ -362,7 +362,7 @@ __isl_give isl_printer *isl_printer_set_suffix(__isl_take isl_printer *p,
+ 		return NULL;
+ 
+ 	free(p->suffix);
+-	p->suffix = suffix ? strdup(suffix) : NULL;
++	p->suffix = suffix ? _strdup(suffix) : NULL;
+ 
+ 	return p;
+ }
+@@ -681,7 +681,7 @@ __isl_give char *isl_printer_get_str(__isl_keep isl_printer *printer)
+ 			"printer", return NULL);
+ 	if (!printer->buf)
+ 		return NULL;
+-	return strdup(printer->buf);
++	return _strdup(printer->buf);
+ }
+ 
+ __isl_give isl_printer *isl_printer_flush(__isl_take isl_printer *p)
+diff --git a/isl_stream.c b/isl_stream.c
+index cf1fd5e..b623d31 100644
+--- a/isl_stream.c
++++ b/isl_stream.c
+@@ -56,7 +56,7 @@ enum isl_token_type isl_stream_register_keyword(__isl_keep isl_stream *s,
+ 	if (!keyword)
+ 		return ISL_TOKEN_ERROR;
+ 	keyword->type = s->next_type++;
+-	keyword->name = strdup(name);
++	keyword->name = _strdup(name);
+ 	if (!keyword->name) {
+ 		free(keyword);
+ 		return ISL_TOKEN_ERROR;
+@@ -111,7 +111,7 @@ __isl_give char *isl_token_get_str(isl_ctx *ctx, struct isl_token *tok)
+ 			"token does not have a string representation",
+ 			return NULL);
+ 
+-	return strdup(tok->u.s);
++	return _strdup(tok->u.s);
+ }
+ 
+ void isl_token_free(struct isl_token *tok)
+@@ -429,7 +429,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 			tok = isl_token_new(s->ctx, line, col, old_line != line);
+ 			if (!tok)
+ 				return NULL;
+-			tok->u.s = strdup("->");
++			tok->u.s = _strdup("->");
+ 			tok->type = ISL_TOKEN_TO;
+ 			return tok;
+ 		}
+@@ -488,7 +488,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 		tok->type = check_keywords(s);
+ 		if (tok->type != ISL_TOKEN_IDENT)
+ 			tok->is_keyword = 1;
+-		tok->u.s = strdup(s->buffer);
++		tok->u.s = _strdup(s->buffer);
+ 		if (!tok->u.s)
+ 			goto error;
+ 		return tok;
+@@ -506,7 +506,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 			goto error;
+ 		}
+ 		isl_stream_push_char(s, '\0');
+-		tok->u.s = strdup(s->buffer);
++		tok->u.s = _strdup(s->buffer);
+ 		return tok;
+ 	}
+ 	if (c == '=') {
+@@ -515,7 +515,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 		if (!tok)
+ 			return NULL;
+ 		if ((c = isl_stream_getc(s)) == '=') {
+-			tok->u.s = strdup("==");
++			tok->u.s = _strdup("==");
+ 			tok->type = ISL_TOKEN_EQ_EQ;
+ 			return tok;
+ 		}
+@@ -530,7 +530,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 		if (!tok)
+ 			return NULL;
+ 		if ((c = isl_stream_getc(s)) == '=') {
+-			tok->u.s = strdup(":=");
++			tok->u.s = _strdup(":=");
+ 			tok->type = ISL_TOKEN_DEF;
+ 			return tok;
+ 		}
+@@ -545,19 +545,19 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 		if (!tok)
+ 			return NULL;
+ 		if ((c = isl_stream_getc(s)) == '=') {
+-			tok->u.s = strdup(">=");
++			tok->u.s = _strdup(">=");
+ 			tok->type = ISL_TOKEN_GE;
+ 			return tok;
+ 		} else if (c == '>') {
+ 			if ((c = isl_stream_getc(s)) == '=') {
+-				tok->u.s = strdup(">>=");
++				tok->u.s = _strdup(">>=");
+ 				tok->type = ISL_TOKEN_LEX_GE;
+ 				return tok;
+ 			}
+-			tok->u.s = strdup(">>");
++			tok->u.s = _strdup(">>");
+ 			tok->type = ISL_TOKEN_LEX_GT;
+ 		} else {
+-			tok->u.s = strdup(">");
++			tok->u.s = _strdup(">");
+ 			tok->type = ISL_TOKEN_GT;
+ 		}
+ 		if (c != -1)
+@@ -570,19 +570,19 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 		if (!tok)
+ 			return NULL;
+ 		if ((c = isl_stream_getc(s)) == '=') {
+-			tok->u.s = strdup("<=");
++			tok->u.s = _strdup("<=");
+ 			tok->type = ISL_TOKEN_LE;
+ 			return tok;
+ 		} else if (c == '<') {
+ 			if ((c = isl_stream_getc(s)) == '=') {
+-				tok->u.s = strdup("<<=");
++				tok->u.s = _strdup("<<=");
+ 				tok->type = ISL_TOKEN_LEX_LE;
+ 				return tok;
+ 			}
+-			tok->u.s = strdup("<<");
++			tok->u.s = _strdup("<<");
+ 			tok->type = ISL_TOKEN_LEX_LT;
+ 		} else {
+-			tok->u.s = strdup("<");
++			tok->u.s = _strdup("<");
+ 			tok->type = ISL_TOKEN_LT;
+ 		}
+ 		if (c != -1)
+@@ -595,10 +595,10 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 			return NULL;
+ 		tok->type = ISL_TOKEN_AND;
+ 		if ((c = isl_stream_getc(s)) != '&' && c != -1) {
+-			tok->u.s = strdup("&");
++			tok->u.s = _strdup("&");
+ 			isl_stream_ungetc(s, c);
+ 		} else
+-			tok->u.s = strdup("&&");
++			tok->u.s = _strdup("&&");
+ 		return tok;
+ 	}
+ 	if (c == '|') {
+@@ -607,10 +607,10 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 			return NULL;
+ 		tok->type = ISL_TOKEN_OR;
+ 		if ((c = isl_stream_getc(s)) != '|' && c != -1) {
+-			tok->u.s = strdup("|");
++			tok->u.s = _strdup("|");
+ 			isl_stream_ungetc(s, c);
+ 		} else
+-			tok->u.s = strdup("||");
++			tok->u.s = _strdup("||");
+ 		return tok;
+ 	}
+ 	if (c == '/') {
+@@ -621,7 +621,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 			tok->type = (enum isl_token_type) '/';
+ 			isl_stream_ungetc(s, c);
+ 		} else {
+-			tok->u.s = strdup("/\\");
++			tok->u.s = _strdup("/\\");
+ 			tok->type = ISL_TOKEN_AND;
+ 		}
+ 		return tok;
+@@ -634,7 +634,7 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 			tok->type = (enum isl_token_type) '\\';
+ 			isl_stream_ungetc(s, c);
+ 		} else {
+-			tok->u.s = strdup("\\/");
++			tok->u.s = _strdup("\\/");
+ 			tok->type = ISL_TOKEN_OR;
+ 		}
+ 		return tok;
+@@ -644,12 +644,12 @@ static struct isl_token *next_token(__isl_keep isl_stream *s, int same_line)
+ 		if (!tok)
+ 			return NULL;
+ 		if ((c = isl_stream_getc(s)) == '=') {
+-			tok->u.s = strdup("!=");
++			tok->u.s = _strdup("!=");
+ 			tok->type = ISL_TOKEN_NE;
+ 			return tok;
+ 		} else {
+ 			tok->type = ISL_TOKEN_NOT;
+-			tok->u.s = strdup("!");
++			tok->u.s = _strdup("!");
+ 		}
+ 		if (c != -1)
+ 			isl_stream_ungetc(s, c);
+@@ -712,7 +712,7 @@ char *isl_stream_read_ident_if_available(__isl_keep isl_stream *s)
+ 	if (!tok)
+ 		return NULL;
+ 	if (tok->type == ISL_TOKEN_IDENT) {
+-		char *ident = strdup(tok->u.s);
++		char *ident = _strdup(tok->u.s);
+ 		isl_token_free(tok);
+ 		return ident;
+ 	}
