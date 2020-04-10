@@ -1,6 +1,6 @@
 if [[ "$target_platform" == "amd64" ]]; then
   export CFLAGS="$CFLAGS -O3 -Dstrdup=_strdup"
-  ./configure --prefix=$PREFIX --with-int=imath 
+  ./configure --prefix=$PREFIX --with-int=imath || (cat config.log && false)
   patch_libtool
 else
   ./configure --prefix="$PREFIX" --with-gmp-prefix="$PREFIX"
