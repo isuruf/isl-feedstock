@@ -1,4 +1,4 @@
-if [[ "$target_platform" == "win-64" ]]; then
+if [[ "$target_platform" == "amd64" ]]; then
   ./configure --prefix=$PREFIX --with-int=imath CFLAGS='$CFLAGS -O3 -Dstrdup=_strdup'
   patch_libtool
 else
