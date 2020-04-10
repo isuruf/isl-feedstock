@@ -22,10 +22,8 @@ requirements:
     - make                   # [unix]
   host:
     - gmp             # [unix]
-    - mpir            # [win]
   run:
     - gmp             # [unix]
-    - mpir            # [win]
 
 test:
   commands:
