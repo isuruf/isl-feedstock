@@ -9,7 +9,8 @@ source:
   url: http://isl.gforge.inria.fr/isl-{{ version }}.tar.bz2
   md5: e2be862b79d74234e468981bcae2a964
   patches:
-    - no_undefined.patch
+    # From https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-isl/isl-0.14.1-no-undefined.patch
+    - no_undefined.patch  # [win]
 
 build:
   number: 1
