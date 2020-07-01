@@ -1,4 +1,4 @@
-{% set version = "0.22" %}
+{% set version = "0.22.1" %}
 
 package:
   name: isl
@@ -7,7 +7,7 @@ package:
 source:
   fn: isl-{{ version }}.tar.bz2
   url: http://isl.gforge.inria.fr/isl-{{ version }}.tar.bz2
-  md5: 4e6b2a1dd20b2ac011730a24580ff7a9
+  sha256: 1a668ef92eb181a7c021e8531a3ca89fd71aa1b3744db56f68365ab0a224c5cd
   patches:
     # From https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-isl/isl-0.14.1-no-undefined.patch
     - no_undefined.patch  # [win]
