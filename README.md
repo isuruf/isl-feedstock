@@ -5,7 +5,7 @@ Home: http://isl.gforge.inria.fr/
 
 Package license: MIT
 
-Feedstock license: BSD 3-Clause
+Feedstock license: BSD-3-Clause
 
 Summary: a thread-safe C library for manipulating sets and relations of integer points bounded by affine constraints.
 
