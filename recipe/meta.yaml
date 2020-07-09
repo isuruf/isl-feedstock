@@ -13,8 +13,7 @@ source:
     - no_undefined.patch  # [win]
 
 build:
-  number: 0
-  skip: true  # [win and vc<14]
+  number: 1
   run_exports:
     - {{ pin_subpackage("isl", max_pin="x.x") }}
 
@@ -32,7 +31,7 @@ test:
   commands:
     - if not exist %LIBRARY_LIB%\\isl.lib exit 1            # [win]
     - if not exist %LIBRARY_INC%\\isl\\options.h exit 1     # [win]
-    - test -f "$PREFIX/lib/libisl.a"            # [unix]
+    - test ! -f "$PREFIX/lib/libisl.a"          # [unix]
     - test -f "$PREFIX/lib/libisl${SHLIB_EXT}"  # [unix]
     - test -d "$PREFIX/include/isl"             # [unix]
 
