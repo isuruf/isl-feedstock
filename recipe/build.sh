@@ -12,7 +12,7 @@ else
   ./configure --prefix="$PREFIX" --with-gmp-prefix="$PREFIX" --disable-static
 fi
 
-make -j$CPU_COUNT
+make -j$CPU_COUNT V=1
 if [[ "$CONDA_BUILD_CROSS_COMPILATION" != 1 ]]; then
   make check
 fi
